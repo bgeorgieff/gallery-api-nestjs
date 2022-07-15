@@ -1,26 +1,61 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGalleryDto } from './dto/create-gallery.dto';
-import { UpdateGalleryDto } from './dto/update-gallery.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { IGallery } from 'src/interfaces/gallery.interface';
+import { GalleryDto } from './dto/gallery.dto';
 
 @Injectable()
 export class GalleryService {
-  create(createGalleryDto: CreateGalleryDto) {
-    return 'This action adds a new gallery';
+  constructor(
+    @InjectModel('Gallery') private readonly galleryModel: Model<IGallery>,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
+
+  async create(
+    file: Express.Multer.File,
+    createGalleryDto: GalleryDto,
+  ): Promise<GalleryDto | undefined> {
+    try {
+      const imageUrl = (
+        await this.cloudinaryService.uploadResult(file)
+      ).toString();
+
+      const painting: GalleryDto = {
+        imageUrl,
+        imageAltTxt: createGalleryDto.imageAltTxt,
+        name: createGalleryDto.name,
+        dateCreated: createGalleryDto.dateCreated,
+        size: createGalleryDto.size,
+        uniqueId: createGalleryDto.uniqueId,
+        description: createGalleryDto.description,
+        isFeatured: true,
+      };
+
+      return await new this.galleryModel(painting).save();
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 
-  findAll() {
-    return `This action returns all gallery`;
+  async findAll() {
+    try {
+      return await this.galleryModel.find();
+    } catch (e) {}
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gallery`;
+  async findOne(_id: number) {
+    return await this.galleryModel.findOne({ _id });
   }
 
-  update(id: number, updateGalleryDto: UpdateGalleryDto) {
-    return `This action updates a #${id} gallery`;
+  async update(_id: number, updateGalleryDto: GalleryDto) {
+    return await this.galleryModel.findOneAndUpdate(
+      { _id },
+      { updateGalleryDto },
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} gallery`;
+  async remove(_id: number) {
+    return await this.galleryModel.deleteOne({ _id });
   }
 }

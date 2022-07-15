@@ -6,18 +6,48 @@ import {
   Patch,
   Param,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { GalleryService } from './gallery.service';
-import { CreateGalleryDto } from './dto/create-gallery.dto';
-import { UpdateGalleryDto } from './dto/update-gallery.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
+import { GalleryDto } from './dto/gallery.dto';
+import { Endpoints } from 'src/enums/endpoints.enum';
+import { Controllers } from 'src/enums/controllers.enum';
+import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 
-@Controller('gallery')
+@Controller(Controllers.gallery)
+@ApiTags(Controllers.gallery)
 export class GalleryController {
   constructor(private readonly galleryService: GalleryService) {}
 
   @Post()
-  create(@Body() createGalleryDto: CreateGalleryDto) {
-    return this.galleryService.create(createGalleryDto);
+  @UseInterceptors(FileInterceptor('imageUrl'))
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        imageUrl: {
+          type: 'string',
+          format: 'binary',
+        },
+        imageAltTxt: { type: 'string' },
+        name: { type: 'boolean' },
+        dateCreated: { type: 'string' },
+        size: { type: 'string' },
+        uniqueId: { type: 'string' },
+        description: { type: 'string' },
+        isFeatured: { type: 'boolean' },
+      },
+    },
+  })
+  create(
+    @UploadedFile() file: Express.Multer.File,
+    @Body() createGalleryDto: GalleryDto,
+  ) {
+    return this.galleryService.create(file, createGalleryDto);
   }
 
   @Get()
@@ -25,17 +55,17 @@ export class GalleryController {
     return this.galleryService.findAll();
   }
 
-  @Get(':id')
+  @Get(Endpoints.id)
   findOne(@Param('id') id: string) {
     return this.galleryService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateGalleryDto: UpdateGalleryDto) {
+  @Patch(Endpoints.id)
+  update(@Param('id') id: string, @Body() updateGalleryDto: GalleryDto) {
     return this.galleryService.update(+id, updateGalleryDto);
   }
 
-  @Delete(':id')
+  @Delete(Endpoints.id)
   remove(@Param('id') id: string) {
     return this.galleryService.remove(+id);
   }
