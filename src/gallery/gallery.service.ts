@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { IGallery } from 'src/interfaces/gallery.interface';
 import { GalleryDto } from './dto/gallery.dto';
+import { UpdateGalleryDto } from './dto/update-gallery.dto';
 
 @Injectable()
 export class GalleryService {
@@ -48,7 +49,7 @@ export class GalleryService {
     return await this.galleryModel.findOne({ _id });
   }
 
-  async update(_id: number, updateGalleryDto: GalleryDto) {
+  async update(_id: number, updateGalleryDto: UpdateGalleryDto) {
     return await this.galleryModel.findOneAndUpdate(
       { _id },
       { updateGalleryDto },
