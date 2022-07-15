@@ -23,10 +23,10 @@ export class Gallery {
   @Prop({ required: true })
   uniqueId: string;
 
-  @Prop()
+  @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true })
+  @Prop({ default: false })
   isFeatured: boolean;
 }
 
