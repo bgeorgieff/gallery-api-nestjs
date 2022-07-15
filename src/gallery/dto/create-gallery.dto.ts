@@ -17,11 +17,8 @@ export class GalleryDto {
   size: string;
 
   @ApiProperty()
-  uniqueId: string;
-
-  @ApiProperty()
   description: string;
 
   @ApiProperty()
-  isFeatured: boolean;
+  isFeatured?: boolean;
 }

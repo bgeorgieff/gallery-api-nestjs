@@ -12,10 +12,12 @@ import {
 import { GalleryService } from './gallery.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { GalleryDto } from './dto/gallery.dto';
+import { GalleryDto } from './dto/create-gallery.dto';
 import { Endpoints } from 'src/enums/endpoints.enum';
 import { Controllers } from 'src/enums/controllers.enum';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import { v4 as uuidv4 } from 'uuid';
+import { UpdateGalleryDto } from './dto/update-gallery.dto';
 
 @Controller(Controllers.gallery)
 @ApiTags(Controllers.gallery)
@@ -28,16 +30,23 @@ export class GalleryController {
   @ApiBody({
     schema: {
       type: 'object',
+      required: [
+        'imageUrl',
+        'imageAltTxt',
+        'name',
+        'dateCreated',
+        'size',
+        'description',
+      ],
       properties: {
         imageUrl: {
           type: 'string',
           format: 'binary',
         },
         imageAltTxt: { type: 'string' },
-        name: { type: 'boolean' },
+        name: { type: 'string' },
         dateCreated: { type: 'string' },
         size: { type: 'string' },
-        uniqueId: { type: 'string' },
         description: { type: 'string' },
         isFeatured: { type: 'boolean' },
       },
@@ -47,7 +56,8 @@ export class GalleryController {
     @UploadedFile() file: Express.Multer.File,
     @Body() createGalleryDto: GalleryDto,
   ) {
-    return this.galleryService.create(file, createGalleryDto);
+    const uniqueId = uuidv4().slice(0, 8);
+    return this.galleryService.create(file, createGalleryDto, uniqueId);
   }
 
   @Get()
@@ -56,17 +66,46 @@ export class GalleryController {
   }
 
   @Get(Endpoints.id)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['id'],
+      properties: {
+        id: {
+          type: 'string',
+        },
+      },
+    },
+  })
   findOne(@Param('id') id: string) {
-    return this.galleryService.findOne(+id);
+    return this.galleryService.findOne(id);
   }
 
   @Patch(Endpoints.id)
-  update(@Param('id') id: string, @Body() updateGalleryDto: GalleryDto) {
-    return this.galleryService.update(+id, updateGalleryDto);
+  @UseInterceptors(FileInterceptor('imageUrl'))
+  @ApiParam({ name: 'id', type: 'string' })
+  @ApiBody({ type: UpdateGalleryDto })
+  update(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() updateGalleryDto: UpdateGalleryDto,
+  ) {
+    return this.galleryService.update(id, file, updateGalleryDto);
   }
 
   @Delete(Endpoints.id)
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['id'],
+      properties: {
+        id: {
+          type: 'string',
+        },
+      },
+    },
+  })
   remove(@Param('id') id: string) {
-    return this.galleryService.remove(+id);
+    return this.galleryService.remove(id);
   }
 }
