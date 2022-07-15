@@ -66,17 +66,7 @@ export class GalleryController {
   }
 
   @Get(Endpoints.id)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: ['id'],
-      properties: {
-        id: {
-          type: 'string',
-        },
-      },
-    },
-  })
+  @ApiParam({ name: 'id', type: 'string' })
   findOne(@Param('id') id: string) {
     return this.galleryService.findOne(id);
   }
@@ -84,7 +74,24 @@ export class GalleryController {
   @Patch(Endpoints.id)
   @UseInterceptors(FileInterceptor('imageUrl'))
   @ApiParam({ name: 'id', type: 'string' })
-  @ApiBody({ type: UpdateGalleryDto })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        imageUrl: {
+          type: 'string',
+          format: 'binary',
+        },
+        imageAltTxt: { type: 'string' },
+        name: { type: 'string' },
+        dateCreated: { type: 'string' },
+        size: { type: 'string' },
+        description: { type: 'string' },
+        isFeatured: { type: 'boolean' },
+      },
+    },
+  })
   update(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
@@ -94,17 +101,7 @@ export class GalleryController {
   }
 
   @Delete(Endpoints.id)
-  @ApiBody({
-    schema: {
-      type: 'object',
-      required: ['id'],
-      properties: {
-        id: {
-          type: 'string',
-        },
-      },
-    },
-  })
+  @ApiParam({ name: 'id', type: 'string' })
   remove(@Param('id') id: string) {
     return this.galleryService.remove(id);
   }
