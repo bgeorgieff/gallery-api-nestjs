@@ -7,7 +7,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Endpoints } from 'src/enums/endpoints.enum';
 
 @Controller(Controllers.user)
-@ApiTags(Controllers.users)
+@ApiTags(Controllers.user)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
