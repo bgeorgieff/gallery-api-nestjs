@@ -2,7 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { IGallery } from 'src/interfaces/gallery.interface';
+import { Messages } from 'src/enums/messages.enum';
+import { IGallery } from 'src/interfaces/IGallery.interface';
+import { IMessage } from 'src/interfaces/IMessage.interface';
 import { GalleryDto } from './dto/create-gallery.dto';
 import { UpdateGalleryDto } from './dto/update-gallery.dto';
 
@@ -43,7 +45,9 @@ export class GalleryService {
   async findAll() {
     try {
       return await this.galleryModel.find();
-    } catch (e) {}
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 
   async findOne(_id: string): Promise<GalleryDto | undefined> {
@@ -65,6 +69,7 @@ export class GalleryService {
       ).toString();
 
       const updatedPainting: Partial<IGallery> = {
+        imageUrl,
         imageAltTxt: updateGalleryDto.imageAltTxt,
         name: updateGalleryDto.name,
         dateCreated: updateGalleryDto.dateCreated,
@@ -74,7 +79,7 @@ export class GalleryService {
       };
       return await this.galleryModel.findOneAndUpdate(
         { _id },
-        { $set: { imageUrl, ...updatedPainting } },
+        { $set: { ...updatedPainting } },
         { returnDocument: 'after' },
       );
     } else {
@@ -86,10 +91,10 @@ export class GalleryService {
     }
   }
 
-  async remove(_id: string): Promise<{ message: string } | undefined> {
+  async remove(_id: string): Promise<IMessage | undefined> {
     try {
       await this.galleryModel.deleteOne({ _id });
-      return { message: 'Painting has been deleted' };
+      return { message: Messages.paintingDeleted };
     } catch (e) {
       return new BadRequestException(e);
     }
