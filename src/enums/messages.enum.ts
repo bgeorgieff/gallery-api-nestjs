@@ -3,4 +3,5 @@ export enum Messages {
   paintingDeleted = 'Painting has been deleted',
   couldntFindUser = 'Could not find the user',
   wrongPassword = 'Wrong password',
+  userMustBeAdmin = 'User must be admin',
 }
