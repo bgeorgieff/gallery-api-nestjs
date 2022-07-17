@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Controllers } from 'src/enums/controllers.enum';
-import { LocalAuthGuard } from './local.auth.guard';
+import { LocalAuthGuard } from './strategies/local.auth.guard';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Endpoints } from 'src/enums/endpoints.enum';
 
