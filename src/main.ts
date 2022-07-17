@@ -16,10 +16,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Gallery API')
-    .setDescription('Gallery api for the correlated front-end project')
+    .setDescription('Gallery api for the project Gallery App.')
     .setVersion('1.0')
-    .addTag('Gallery')
-    .addBearerAuth()
+    .addTag('Endpoints')
     .build();
 
   const options: SwaggerDocumentOptions = {
