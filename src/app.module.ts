@@ -9,7 +9,9 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 @Module({
   imports: [
     configModule,
-    MongooseModule.forRoot(process.env.DB_URL),
+    MongooseModule.forRoot(process.env.DB_URL, {
+      autoIndex: true,
+    }),
     UserModule,
     GalleryModule,
     MailModule,
