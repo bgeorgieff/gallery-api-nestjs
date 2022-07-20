@@ -4,7 +4,7 @@ export interface IGallery extends Document {
   imageUrl: string;
   imageAltTxt: string;
   name: string;
-  dateCreated: string;
+  dateCreated: Date;
   size: string;
   uniqueId: string;
   description: string;

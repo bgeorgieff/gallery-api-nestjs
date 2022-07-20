@@ -24,7 +24,6 @@ export class GalleryService {
       const imageUrl = (
         await this.cloudinaryService.uploadResult(file)
       ).toString();
-
       const painting: Partial<IGallery> = {
         imageUrl,
         imageAltTxt: createGalleryDto.imageAltTxt,

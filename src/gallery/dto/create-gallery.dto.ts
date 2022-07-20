@@ -11,7 +11,7 @@ export class GalleryDto {
   name: string;
 
   @ApiProperty()
-  dateCreated: string;
+  dateCreated: Date;
 
   @ApiProperty()
   size: string;
