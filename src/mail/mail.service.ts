@@ -38,15 +38,16 @@ export class MailService {
     }
   }
 
-  findAll() {
-    return `This action returns all mail`;
-  }
+  //TODO add those if needed
+  // findAll() {
+  //   return `This action returns all mail`;
+  // }
 
-  findOne(id: number) {
-    return `This action returns a #${id} mail`;
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} mail`;
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} mail`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} mail`;
+  // }
 }
