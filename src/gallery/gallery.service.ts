@@ -90,7 +90,7 @@ export class GalleryService {
     }
   }
 
-  async remove(_id: string): Promise<IMessage | undefined> {
+  async remove(_id: string): Promise<{ message: string } | undefined> {
     try {
       await this.galleryModel.deleteOne({ _id });
       return { message: Messages.paintingDeleted };

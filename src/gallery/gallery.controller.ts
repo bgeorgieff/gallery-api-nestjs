@@ -66,7 +66,7 @@ export class GalleryController {
       },
     },
   })
-  create(
+  async create(
     @ExtractUser() user: IUserPayload,
     @UploadedFile() file: Express.Multer.File,
     @Body() createGalleryDto: GalleryDto,
@@ -86,7 +86,7 @@ export class GalleryController {
 
   @Get(Endpoints.id)
   @ApiParam({ name: 'id', type: 'string' })
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.galleryService.findOne(id);
   }
 
@@ -113,7 +113,7 @@ export class GalleryController {
       },
     },
   })
-  update(
+  async update(
     @ExtractUser() user: IUserPayload,
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
@@ -130,7 +130,7 @@ export class GalleryController {
   @Delete(Endpoints.id)
   @ApiBearerAuth()
   @ApiParam({ name: 'id', type: 'string' })
-  remove(@ExtractUser() user: IUserPayload, @Param('id') id: string) {
+  async remove(@ExtractUser() user: IUserPayload, @Param('id') id: string) {
     if (user.isAdmin) {
       return this.galleryService.remove(id);
     } else {

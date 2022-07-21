@@ -4,4 +4,5 @@ export enum Messages {
   couldntFindUser = 'Could not find the user',
   wrongPassword = 'Wrong password',
   userMustBeAdmin = 'User must be admin',
+  emailSent = 'Email was sent',
 }
