@@ -13,14 +13,14 @@ export class UserController {
 
   @Post(Endpoints.register)
   @ApiBody({ type: CreateUserDto })
-  create(@Body() createUserDto: CreateUserDto) {
+  async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
 
   @UseGuards(LocalAuthGuard)
   @Post(Endpoints.login)
   @ApiBody({ type: CreateUserDto })
-  login(@Body('email') email: Partial<CreateUserDto>) {
+  async login(@Body('email') email: Partial<CreateUserDto>) {
     return this.userService.login(email);
   }
 }
